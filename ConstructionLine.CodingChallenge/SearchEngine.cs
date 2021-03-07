@@ -24,6 +24,16 @@ namespace ConstructionLine.CodingChallenge
 
             var matchedBySizeColor = matchedBySize.Intersect(matchedByColor);
 
+            return new SearchResults
+            {
+                Shirts = matchedBySizeColor.ToList(),
+                ColorCounts = GetMatchedResultsByColor(matchedBySizeColor),
+                SizeCounts = GetMatchedResultsBySize(matchedBySizeColor)
+            };
+        }
+
+        public List<ColorCount> GetMatchedResultsByColor(IEnumerable<Shirt> matchedBySizeColor)
+        {
             var colorsResult = matchedBySizeColor
                .GroupBy(x => x.Color)
                .Select(c => new ColorCount()
@@ -37,6 +47,11 @@ namespace ConstructionLine.CodingChallenge
                 colorsResult.Add(new ColorCount() { Color = color, Count = 0 });
             }
 
+            return colorsResult;
+        }
+
+        public List<SizeCount> GetMatchedResultsBySize(IEnumerable<Shirt> matchedBySizeColor)
+        {
             var sizesResult = matchedBySizeColor
                .GroupBy(x => x.Size)
                .Select(c => new SizeCount()
@@ -48,14 +63,7 @@ namespace ConstructionLine.CodingChallenge
             {
                 sizesResult.Add(new SizeCount() { Size = size, Count = 0 });
             }
-
-
-            return new SearchResults
-            {
-                Shirts = matchedBySizeColor.ToList(),
-                ColorCounts = colorsResult,
-                SizeCounts = sizesResult
-            };
+            return sizesResult;
         }
     }
 }
